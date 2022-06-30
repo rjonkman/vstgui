@@ -852,10 +852,12 @@ void CViewContainer::drawRect (CDrawContext* pContext, const CRect& updateRect)
 		getTransform ().inverse ().transform (clientRect);
 		getTransform ().transform (oldClip2);
 		
+		bool resizing = getFrame()->getResizing();
+		
 		// draw each view
 		for (const auto& pV : pImpl->children)
 		{
-			if (pV->isVisible ())
+			if (pV->isVisible () || resizing)
 			{
 				if (frame && _focusDrawing && _focusView == pV && !_focusDrawing->drawFocusOnTop ())
 				{
@@ -884,7 +886,7 @@ void CViewContainer::drawRect (CDrawContext* pContext, const CRect& updateRect)
 				{
 					CRect viewSize = pV->getViewSize ();
 					viewSize.bound (newClip);
-					if (viewSize.getWidth () == 0 || viewSize.getHeight () == 0)
+					if ((viewSize.getWidth () == 0 || viewSize.getHeight () == 0) && !resizing)
 						continue;
 					pContext->setClipRect (viewSize);
 					float globalContextAlpha = pContext->getGlobalAlpha ();
@@ -940,7 +942,7 @@ void CViewContainer::drawRect (CDrawContext* pContext, const CRect& updateRect)
  */
 bool CViewContainer::checkUpdateRect (CView* view, const CRect& rect)
 {
-	return view->checkUpdate (rect) && view->isVisible ();
+	return view->checkUpdate (rect) && (view->isVisible () || getFrame()->getResizing());
 }
 
 //-----------------------------------------------------------------------------
