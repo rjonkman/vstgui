@@ -232,6 +232,9 @@ public:
 	#endif
 
 	CLASS_METHODS(CFrame, CViewContainer)
+	
+	void setResizing(bool state) { resizing = state; }
+	bool getResizing() { return resizing; }
 
 	//-------------------------------------------
 protected:
@@ -285,6 +288,8 @@ private:
 
 	struct Impl;
 	Impl* pImpl {nullptr};
+	
+	bool resizing = false;
 };
 
 //----------------------------------------------------
