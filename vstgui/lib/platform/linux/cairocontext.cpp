@@ -519,18 +519,37 @@ void Context::fillLinearGradient (CGraphicsPath* path, const CGradient& gradient
 	{
 		auto graphicsPath = dynamic_cast<GraphicsPath*> (
 			path->getPlatformPath (PlatformGraphicsPathFillMode::Ignored).get ());
+
 		if (!graphicsPath)
 			return;
-		std::unique_ptr<GraphicsPath> alignedPath;
-		if (needPixelAlignment (getDrawMode ()))
+
+        std::unique_ptr<GraphicsPath> alignedPath;
+
+        if (needPixelAlignment (getDrawMode ()))
 			alignedPath = graphicsPath->copyPixelAlign (getCurrentTransform ());
+
 		if (auto cairoGradient = dynamic_cast<Gradient*> (gradient.getPlatformGradient ().get ()))
 		{
 			if (auto cd = DrawBlock::begin (*this))
 			{
 				auto p = alignedPath ? alignedPath->getCairoPath () : graphicsPath->getCairoPath ();
-				cairo_append_path (cr, p);
-				cairo_set_source (cr, cairoGradient->getLinearGradient (startPoint, endPoint));
+
+                if (transformation)
+                {
+                    cairo_matrix_t currentMatrix;
+                    cairo_matrix_t resultMatrix;
+                    auto matrix = convert (*transformation);
+                    cairo_get_matrix (cr, &currentMatrix);
+                    cairo_matrix_multiply (&resultMatrix, &matrix, &currentMatrix);
+                    cairo_set_matrix (cr, &resultMatrix);
+                }
+
+				//PROBABLY NEED TO ADJUST THESE TO MAKE IT WORK WITH TRANSFORMATION
+                CPoint newStart = startPoint;
+                CPoint newEnd = endPoint;
+
+                cairo_set_source (cr, cairoGradient->getLinearGradient (newStart, newEnd));
+                cairo_append_path (cr, p);
 				if (evenOdd)
 				{
 					cairo_set_fill_rule (cr, CAIRO_FILL_RULE_EVEN_ODD);
@@ -550,11 +569,46 @@ void Context::fillRadialGradient (CGraphicsPath* path, const CGradient& gradient
 								  const CPoint& center, CCoord radius, const CPoint& originOffset,
 								  bool evenOdd, CGraphicsTransform* transformation)
 {
-#warning TODO: Implementation
-	auto cd = DrawBlock::begin (*this);
-	if (cd)
-	{
-	}
+if (path)
+    {
+
+        auto graphicsPath = dynamic_cast<GraphicsPath*> (
+            path->getPlatformPath (PlatformGraphicsPathFillMode::Ignored).get ());
+        if (!graphicsPath)
+            return;
+        std::unique_ptr<GraphicsPath> alignedPath;
+        if (needPixelAlignment (getDrawMode ()))
+            alignedPath = graphicsPath->copyPixelAlign (getCurrentTransform ());
+        if (auto cairoGradient = dynamic_cast<Gradient*> (gradient.getPlatformGradient ().get ()))
+        {
+            if (auto cd = DrawBlock::begin (*this))
+            {
+                auto p = alignedPath ? alignedPath->getCairoPath () : graphicsPath->getCairoPath ();
+
+                if (transformation)
+                {
+                    cairo_matrix_t currentMatrix;
+                    cairo_matrix_t resultMatrix;
+                    auto matrix = convert (*transformation);
+                    cairo_get_matrix (cr, &currentMatrix);
+                    cairo_matrix_multiply (&resultMatrix, &matrix, &currentMatrix);
+                    cairo_set_matrix (cr, &resultMatrix);
+                }
+
+                cairo_append_path (cr, p);
+                cairo_set_source (cr, cairoGradient->getRadialGradient (center, radius, originOffset));
+                if (evenOdd)
+                {
+                    cairo_set_fill_rule (cr, CAIRO_FILL_RULE_EVEN_ODD);
+                    cairo_fill (cr);
+                }
+                else
+                {
+                    cairo_fill (cr);
+                }
+            }
+        }
+    }
 }
 
 //-----------------------------------------------------------------------------
