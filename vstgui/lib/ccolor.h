@@ -24,7 +24,7 @@ struct CColor
 	: red (inColor.red), green (inColor.green), blue (inColor.blue), alpha (inColor.alpha)
 	{}
 
-	//TEST PUSH
+    //TEST PUSH 2
 	constexpr CColor (const uint32_t color)
     #if WINDOWS || defined(__LITTLE_ENDIAN__) || defined(__LITTLE_ENDIAN)
 	: red ((color >> 24) & 0xFF), green ((color >> 16) & 0xFF), blue (blue = (color >> 8) & 0xFF), alpha (color & 0xFF)
