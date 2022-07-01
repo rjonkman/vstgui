@@ -43,11 +43,11 @@ const PatternHandle& Gradient::getLinearGradient (CPoint start, CPoint end)
 }
 
 //------------------------------------------------------------------------
-const PatternHandle& Gradient::getRadialGradient ()
+const PatternHandle& Gradient::getRadialGradient (CPoint center, CCoord radius, CPoint offset)
 {
 	if (!radialGradient)
 	{
-		radialGradient = PatternHandle (cairo_pattern_create_radial (0, 0, 1, 0, 0, 1));
+        radialGradient = PatternHandle (cairo_pattern_create_radial (center.x, center.y, radius, center.x + offset.x, center.y + offset.y, 0));
 		for (auto& it : getColorStops ())
 		{
 			cairo_pattern_add_color_stop_rgba (
