@@ -20,7 +20,7 @@ public:
 	~Gradient () noexcept override;
 
 	const PatternHandle& getLinearGradient (CPoint start, CPoint end);
-	const PatternHandle& getRadialGradient ();
+	const PatternHandle& getRadialGradient (CPoint center, CCoord radius, CPoint offset);
 
 private:
 	void changed () override;
