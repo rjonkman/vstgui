@@ -515,6 +515,7 @@ void Context::fillLinearGradient (CGraphicsPath* path, const CGradient& gradient
 								  const CPoint& startPoint, const CPoint& endPoint, bool evenOdd,
 								  CGraphicsTransform* transformation)
 {
+
 	if (path)
 	{
 		auto graphicsPath = dynamic_cast<GraphicsPath*> (
@@ -534,6 +535,10 @@ void Context::fillLinearGradient (CGraphicsPath* path, const CGradient& gradient
 			{
 				auto p = alignedPath ? alignedPath->getCairoPath () : graphicsPath->getCairoPath ();
 
+                // Will be adjusted by transform
+                CPoint newStart = startPoint;
+                CPoint newEnd = endPoint;
+
                 if (transformation)
                 {
                     cairo_matrix_t currentMatrix;
@@ -542,11 +547,12 @@ void Context::fillLinearGradient (CGraphicsPath* path, const CGradient& gradient
                     cairo_get_matrix (cr, &currentMatrix);
                     cairo_matrix_multiply (&resultMatrix, &matrix, &currentMatrix);
                     cairo_set_matrix (cr, &resultMatrix);
-                }
 
-				//PROBABLY NEED TO ADJUST THESE TO MAKE IT WORK WITH TRANSFORMATION
-                CPoint newStart = startPoint;
-                CPoint newEnd = endPoint;
+                    CGraphicsTransform gt = transformation->inverse();
+
+                    newStart = gt.transform(newStart);
+                    newEnd = gt.transform(newEnd);
+                }
 
                 cairo_set_source (cr, cairoGradient->getLinearGradient (newStart, newEnd));
                 cairo_append_path (cr, p);
@@ -569,6 +575,7 @@ void Context::fillRadialGradient (CGraphicsPath* path, const CGradient& gradient
 								  const CPoint& center, CCoord radius, const CPoint& originOffset,
 								  bool evenOdd, CGraphicsTransform* transformation)
 {
+return;
 if (path)
     {
 
