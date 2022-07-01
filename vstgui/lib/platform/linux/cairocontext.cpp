@@ -529,7 +529,28 @@ void Context::fillLinearGradient (CGraphicsPath* path, const CGradient& gradient
 			if (auto cd = DrawBlock::begin (*this))
 			{
 				auto p = alignedPath ? alignedPath->getCairoPath () : graphicsPath->getCairoPath ();
-				cairo_append_path (cr, p);
+
+                // Will be adjusted by transform
+                CPoint newStart = startPoint;
+                CPoint newEnd = endPoint;
+
+                if (transformation)
+                {
+                    cairo_matrix_t currentMatrix;
+                    cairo_matrix_t resultMatrix;
+                    auto matrix = convert (*transformation);
+                    cairo_get_matrix (cr, &currentMatrix);
+                    cairo_matrix_multiply (&resultMatrix, &matrix, &currentMatrix);
+                    cairo_set_matrix (cr, &resultMatrix);
+
+                    CGraphicsTransform gt = transformation->inverse();
+
+                    newStart = gt.transform(newStart);
+                    newEnd = gt.transform(newEnd);
+                }
+
+                cairo_set_source (cr, cairoGradient->getLinearGradient (newStart, newEnd));
+                cairo_append_path (cr, p);
 				cairo_set_source (cr, cairoGradient->getLinearGradient (startPoint, endPoint));
 				if (evenOdd)
 				{
