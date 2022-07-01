@@ -313,5 +313,27 @@ UTF8String CColor::toString () const
 	str << std::hex << std::setw (2) << std::setfill ('0') << static_cast<int32_t> (alpha);
 	return UTF8String (str.str ());
 }
+	
+//-----------------------------------------------------------------------------
+void CColor::fromRGBA(uint32_t color) {
+
+    if constexpr(ByteOrder::kNativeByteOrder == ByteOrder::kLittleEndianByteOrder) {
+
+        red = (color >> 24) & 0xFF;
+        green = (color >> 16) & 0xFF;
+        blue = (color >> 8) & 0xFF;
+        alpha = color & 0xFF;
+    }
+
+    else {
+
+        ByteOrder b = ByteOrder::kNativeByteOrder;
+
+        alpha = (color >> 24) & 0xFF;
+        blue = (color >> 16) & 0xFF;
+        green = (color >> 8) & 0xFF;
+        red = color & 0xFF;
+    }
+}
 
 } // VSTGUI
