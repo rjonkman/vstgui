@@ -349,7 +349,6 @@ void Context::drawRect (const CRect& rect, const CDrawStyle drawStyle)
 void Context::drawArc (const CRect& rect, const float startAngle1, const float endAngle2,
 					   const CDrawStyle drawStyle)
 {
-
 	if (auto cd = DrawBlock::begin (*this))
 	{
 		CPoint center = rect.getCenter ();
@@ -605,7 +604,6 @@ void Context::fillRadialGradient (CGraphicsPath* path, const CGradient& gradient
         }
     }
 }
-
 
 //-----------------------------------------------------------------------------
 } // Cairo
