@@ -349,7 +349,6 @@ void Context::drawRect (const CRect& rect, const CDrawStyle drawStyle)
 void Context::drawArc (const CRect& rect, const float startAngle1, const float endAngle2,
 					   const CDrawStyle drawStyle)
 {
-
 	if (auto cd = DrawBlock::begin (*this))
 	{
 		CPoint center = rect.getCenter ();
@@ -516,7 +515,6 @@ void Context::fillLinearGradient (CGraphicsPath* path, const CGradient& gradient
 								  const CPoint& startPoint, const CPoint& endPoint, bool evenOdd,
 								  CGraphicsTransform* transformation)
 {
-
 	if (path)
 	{
 		auto graphicsPath = dynamic_cast<GraphicsPath*> (
@@ -610,7 +608,6 @@ void Context::fillRadialGradient (CGraphicsPath* path, const CGradient& gradient
         }
     }
 }
-
 //-----------------------------------------------------------------------------
 } // Cairo
 } // VSTGUI
