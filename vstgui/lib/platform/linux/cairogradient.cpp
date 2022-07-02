@@ -47,13 +47,13 @@ const PatternHandle& Gradient::getRadialGradient ()
 {
 	if (!radialGradient)
 	{
-		radialGradient = PatternHandle (cairo_pattern_create_radial (0, 0, 1, 0, 0, 1));
+        radialGradient = PatternHandle (cairo_pattern_create_radial (center.x, center.y, 0, center.x + offset.x, center.y + offset.y, radius));
 		for (auto& it : getColorStops ())
 		{
 			cairo_pattern_add_color_stop_rgba (
-			    radialGradient, it.first, it.second.normRed<double> (),
-			    it.second.normGreen<double> (), it.second.normBlue<double> (),
-			    it.second.normAlpha<double> ());
+                radialGradient, it.first, it.second.normRed<double> (),
+                it.second.normGreen<double> (), it.second.normBlue<double> (),
+                it.second.normAlpha<double> ());
 		}
 	}
 	return radialGradient;

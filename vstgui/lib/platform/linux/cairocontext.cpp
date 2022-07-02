@@ -349,6 +349,7 @@ void Context::drawRect (const CRect& rect, const CDrawStyle drawStyle)
 void Context::drawArc (const CRect& rect, const float startAngle1, const float endAngle2,
 					   const CDrawStyle drawStyle)
 {
+
 	if (auto cd = DrawBlock::begin (*this))
 	{
 		CPoint center = rect.getCenter ();
@@ -362,7 +363,7 @@ void Context::drawArc (const CRect& rect, const float startAngle1, const float e
 //-----------------------------------------------------------------------------
 void Context::drawEllipse (const CRect& rect, const CDrawStyle drawStyle)
 {
-	if (auto cd = DrawBlock::begin (*this))
+    if (auto cd = DrawBlock::begin (*this))
 	{
 		CPoint center = rect.getCenter ();
 		cairo_translate (cr, center.x, center.y);
@@ -530,9 +531,7 @@ void Context::fillLinearGradient (CGraphicsPath* path, const CGradient& gradient
 			{
 				auto p = alignedPath ? alignedPath->getCairoPath () : graphicsPath->getCairoPath ();
 
-                // Will be adjusted by transform
-                CPoint newStart = startPoint;
-                CPoint newEnd = endPoint;
+                cairo_set_source (cr, cairoGradient->getLinearGradient (startPoint, endPoint));
 
                 if (transformation)
                 {
@@ -542,16 +541,9 @@ void Context::fillLinearGradient (CGraphicsPath* path, const CGradient& gradient
                     cairo_get_matrix (cr, &currentMatrix);
                     cairo_matrix_multiply (&resultMatrix, &matrix, &currentMatrix);
                     cairo_set_matrix (cr, &resultMatrix);
-
-                    CGraphicsTransform gt = transformation->inverse();
-
-                    newStart = gt.transform(newStart);
-                    newEnd = gt.transform(newEnd);
                 }
 
-                cairo_set_source (cr, cairoGradient->getLinearGradient (newStart, newEnd));
                 cairo_append_path (cr, p);
-				cairo_set_source (cr, cairoGradient->getLinearGradient (startPoint, endPoint));
 				if (evenOdd)
 				{
 					cairo_set_fill_rule (cr, CAIRO_FILL_RULE_EVEN_ODD);
@@ -571,12 +563,49 @@ void Context::fillRadialGradient (CGraphicsPath* path, const CGradient& gradient
 								  const CPoint& center, CCoord radius, const CPoint& originOffset,
 								  bool evenOdd, CGraphicsTransform* transformation)
 {
-#warning TODO: Implementation
-	auto cd = DrawBlock::begin (*this);
-	if (cd)
-	{
-	}
+    if (path)
+    {
+        auto graphicsPath = dynamic_cast<GraphicsPath*> (
+            path->getPlatformPath (PlatformGraphicsPathFillMode::Ignored).get ());
+        if (!graphicsPath)
+            return;
+        std::unique_ptr<GraphicsPath> alignedPath;
+        if (needPixelAlignment (getDrawMode ()))
+            alignedPath = graphicsPath->copyPixelAlign (getCurrentTransform ());
+        if (auto cairoGradient = dynamic_cast<Gradient*> (gradient.getPlatformGradient ().get ()))
+        {
+            if (auto cd = DrawBlock::begin (*this))
+            {
+                auto p = alignedPath ? alignedPath->getCairoPath () : graphicsPath->getCairoPath ();
+
+                cairo_set_source (cr, cairoGradient->getRadialGradient (center, radius, originOffset));
+
+                if (transformation)
+                {
+                    cairo_matrix_t currentMatrix;
+                    cairo_matrix_t resultMatrix;
+                    auto matrix = convert (*transformation);
+                    cairo_get_matrix (cr, &currentMatrix);
+                    cairo_matrix_multiply (&resultMatrix, &matrix, &currentMatrix);
+                    cairo_set_matrix (cr, &resultMatrix);
+                }
+
+                cairo_append_path (cr, p);
+
+                if (evenOdd)
+                {
+                    cairo_set_fill_rule (cr, CAIRO_FILL_RULE_EVEN_ODD);
+                    cairo_fill (cr);
+                }
+                else
+                {
+                    cairo_fill (cr);
+                }
+            }
+        }
+    }
 }
+
 
 //-----------------------------------------------------------------------------
 } // Cairo
