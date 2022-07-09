@@ -416,7 +416,7 @@ void D2DDrawContext::fillRadialGradient (CGraphicsPath* graphicsPath, const CGra
 //-----------------------------------------------------------------------------
 void D2DDrawContext::clearRect (const CRect& rect)
 {
-	if (renderTarget)
+	if (renderTarget && rect.getWidth () > 0 && rect.getHeight () > 0)
 	{
 		CRect oldClip = getCurrentState ().clipRect;
 		setClipRect (rect);
