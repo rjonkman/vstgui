@@ -1102,49 +1102,23 @@ void CViewContainer::onMouseMoveEvent (MouseMoveEvent& event)
 	}
 
     if (auto view = shared (getMouseDownView ()))
-    {
-        auto f = finally ([&, pos = event.mousePosition] () { event.mousePosition = pos; });
-        event.mousePosition.offset (-getViewSize ().left, -getViewSize ().top);
-        getTransform ().inverse ().transform (event.mousePosition);
-        #if VSTGUI_ENABLE_DEPRECATED_METHODS
-        mouseResult = view->callMouseListener (MouseListenerCall::MouseMoved, event.mousePosition,
-                                               buttonState);
-        if (!(mouseResult == kMouseEventNotHandled || mouseResult == kMouseEventNotImplemented))
-        {
-            event.consumed = true;
-            if (mouseResult == kMouseMoveEventHandledButDontNeedMoreEvents)
-                event.ignoreFollowUpMoveAndUpEvents (true);
-            return;
-        }
-        #endif
-        view->dispatchEvent (event);
-    }
-
-    else {
-        auto f = finally ([&, pos = event.mousePosition] () { event.mousePosition = pos; });
-        event.mousePosition.offset (-getViewSize ().left, -getViewSize ().top);
-        getTransform ().inverse ().transform (event.mousePosition);
-
-        for (auto it = pImpl->children.rbegin (), end = pImpl->children.rend (); it != end; ++it)
-        {
-            const auto& pV = *it;
-
-            if (pV && pV->isVisible () && pV->getMouseEnabled () && pV->hitTest (event.mousePosition, event)) {
-                #if VSTGUI_ENABLE_DEPRECATED_METHODS
-                mouseResult = pV->callMouseListener (MouseListenerCall::MouseMoved, event.mousePosition, buttonState);
-
-                if (!(mouseResult == kMouseEventNotHandled || mouseResult == kMouseEventNotImplemented))
-                {
-                    event.consumed = true;
-                    if (mouseResult == kMouseMoveEventHandledButDontNeedMoreEvents)
-                        event.ignoreFollowUpMoveAndUpEvents (true);
-                    return;
-                }
-                #endif
-                pV->dispatchEvent (event);
-            }
-        }
-    }
+	{
+		auto f = finally ([&, pos = event.mousePosition] () { event.mousePosition = pos; });
+		event.mousePosition.offset (-getViewSize ().left, -getViewSize ().top);
+		getTransform ().inverse ().transform (event.mousePosition);
+#if VSTGUI_ENABLE_DEPRECATED_METHODS
+		mouseResult = view->callMouseListener (MouseListenerCall::MouseMoved, event.mousePosition,
+											   buttonState);
+		if (!(mouseResult == kMouseEventNotHandled || mouseResult == kMouseEventNotImplemented))
+		{
+			event.consumed = true;
+			if (mouseResult == kMouseMoveEventHandledButDontNeedMoreEvents)
+				event.ignoreFollowUpMoveAndUpEvents (true);
+			return;
+		}
+#endif
+		view->dispatchEvent (event);
+	}
 }
 
 //------------------------------------------------------------------------
