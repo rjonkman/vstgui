@@ -327,7 +327,7 @@ void CColor::fromRGBA(uint32_t color) {
 
     else {
 
-        ByteOrder b = ByteOrder::kNativeByteOrder;
+        //ByteOrder b = ByteOrder::kNativeByteOrder;
 
         alpha = (color >> 24) & 0xFF;
         blue = (color >> 16) & 0xFF;

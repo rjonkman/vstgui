@@ -56,7 +56,9 @@ public:
 	void drawGraphicsPath (CGraphicsPath* path, PathDrawMode mode = kPathFilled, CGraphicsTransform* transformation = nullptr) override;
 	void fillLinearGradient (CGraphicsPath* path, const CGradient& gradient, const CPoint& startPoint, const CPoint& endPoint, bool evenOdd = false, CGraphicsTransform* transformation = nullptr) override;
 	void fillRadialGradient (CGraphicsPath* path, const CGradient& gradient, const CPoint& center, CCoord radius, const CPoint& originOffset = CPoint (0, 0), bool evenOdd = false, CGraphicsTransform* transformation = nullptr) override;
-	double getScaleFactor () const override { return scaleFactor; }
+    void fillRadialGradient (CGraphicsPath* path, const CGradient& gradient, const CPoint& center, const CPoint& radius, const CPoint& originOffset = CPoint (0, 0), bool evenOdd = false, CGraphicsTransform* transformation = nullptr) override;
+
+    double getScaleFactor () const override { return scaleFactor; }
 	
 	CGContextRef beginCGContext (bool swapYAxis = false, bool integralOffset = false);
 	void releaseCGContext (CGContextRef context);

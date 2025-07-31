@@ -294,6 +294,16 @@ void CGDrawContext::fillRadialGradient (CGraphicsPath* path, const CGradient& gr
 	}
 }
 
+
+void CGDrawContext::fillRadialGradient (CGraphicsPath* path, const CGradient& gradient,
+                                        const CPoint& center, const CPoint& radius,
+                                        const CPoint& originOffset, bool evenOdd,
+                                        CGraphicsTransform* t) {
+    
+    fillRadialGradient(path, gradient, center, radius.x, originOffset, evenOdd, t);
+}
+
+
 //-----------------------------------------------------------------------------
 void CGDrawContext::saveGlobalState ()
 {
