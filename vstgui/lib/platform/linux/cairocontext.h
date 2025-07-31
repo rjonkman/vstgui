@@ -52,6 +52,9 @@ public:
 	void fillRadialGradient (CGraphicsPath* path, const CGradient& gradient, const CPoint& center,
 							 CCoord radius, const CPoint& originOffset, bool evenOdd,
 							 CGraphicsTransform* transformation) override;
+	void fillRadialGradient (CGraphicsPath* path, const CGradient& gradient, const CPoint& center,
+							 const CPoint& radius, const CPoint& originOffset, bool evenOdd,
+							 CGraphicsTransform* transformation) override;
 
 	void saveGlobalState () override;
 	void restoreGlobalState () override;

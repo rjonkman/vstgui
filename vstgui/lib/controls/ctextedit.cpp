@@ -316,6 +316,9 @@ void CTextEdit::platformOnKeyboardEvent (KeyboardEvent& event)
 //------------------------------------------------------------------------
 void CTextEdit::platformTextDidChange ()
 {
+    textEditListeners.forEach (
+        [this] (ITextEditListener* l) { l->onTextEditPlatformControlTextChanged (this); });
+
 	if (platformControl && immediateTextChange)
 		updateText (platformControl);
 }

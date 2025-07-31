@@ -54,6 +54,9 @@ public:
 	void draw (CDrawContext* pContext) override;
 	void drawBack (CDrawContext* pContext, CBitmap* newBack = nullptr) override;
 	void setText (const UTF8String& txt) override;
+    void setCursorPosition (int position);
+    uint32_t getCursorPosition ();
+
 
 	void onKeyboardEvent (KeyboardEvent& event, CFrame* frame) override;
 
@@ -115,7 +118,7 @@ private:
 
 	SharedPointer<CVSTGUITimer> blinkTimer;
 	IPlatformTextEditCallback* callback;
-	STB_TexteditState editState;
+    STB_TexteditState editState;
 	std::vector<CCoord> charWidthCache;
 	CColor selectionColor{kBlueCColor};
 	CCoord cursorOffset{0.};
@@ -238,6 +241,17 @@ bool GenericTextEdit::updateSize ()
 	return true;
 }
 
+
+
+void GenericTextEdit::setCursorPosition (int position) {
+    impl->view->setCursorPosition(position);
+};
+
+uint32_t GenericTextEdit::getCursorPosition () {
+    return impl->view->getCursorPosition();
+};
+
+
 //-----------------------------------------------------------------------------
 STBTextEditView::STBTextEditView (IPlatformTextEditCallback* callback)
 	: CTextLabel ({}), callback (callback)
@@ -259,6 +273,18 @@ bool STBTextEditView::callSTB (Proc proc)
 	}
 	return false;
 }
+
+
+void STBTextEditView::setCursorPosition (int position) {
+    editState.select_start = position;
+    editState.select_end = position;
+    editState.cursor = position;
+}
+
+uint32_t STBTextEditView::getCursorPosition () {
+    return editState.cursor;
+};
+
 
 //-----------------------------------------------------------------------------
 void STBTextEditView::onKeyboardEvent (KeyboardEvent& event, CFrame* frame)

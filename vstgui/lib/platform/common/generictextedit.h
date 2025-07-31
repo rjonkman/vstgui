@@ -21,6 +21,8 @@ public:
 	bool setText (const UTF8String& text) override;
 	bool updateSize () override;
 	bool drawsPlaceholder () const override { return false; }
+	void setCursorPosition (int position) override;
+	uint32_t getCursorPosition () override;
 
 private:
     struct Impl;

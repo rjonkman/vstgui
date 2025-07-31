@@ -44,6 +44,8 @@ public:
 	virtual bool setText (const UTF8String& text) = 0;
 	virtual bool updateSize () = 0;
 	virtual bool drawsPlaceholder () const = 0;
+	virtual void setCursorPosition (int) = 0;
+	virtual uint32_t getCursorPosition () = 0;
 
 //-----------------------------------------------------------------------------
 protected:

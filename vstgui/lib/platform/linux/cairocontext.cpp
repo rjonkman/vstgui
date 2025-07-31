@@ -608,6 +608,53 @@ void Context::fillRadialGradient (CGraphicsPath* path, const CGradient& gradient
         }
     }
 }
+
+void Context::fillRadialGradient (CGraphicsPath* path, const CGradient& gradient,
+								  const CPoint& center, const CPoint& radius, const CPoint& originOffset,
+								  bool evenOdd, CGraphicsTransform* transformation)
+{
+    if (path)
+    {
+        auto graphicsPath = dynamic_cast<GraphicsPath*> (
+            path->getPlatformPath (PlatformGraphicsPathFillMode::Ignored).get ());
+        if (!graphicsPath)
+            return;
+        std::unique_ptr<GraphicsPath> alignedPath;
+        if (needPixelAlignment (getDrawMode ()))
+            alignedPath = graphicsPath->copyPixelAlign (getCurrentTransform ());
+        if (auto cairoGradient = dynamic_cast<Gradient*> (gradient.getPlatformGradient ().get ()))
+        {
+            if (auto cd = DrawBlock::begin (*this))
+            {
+                auto p = alignedPath ? alignedPath->getCairoPath () : graphicsPath->getCairoPath ();
+
+                cairo_set_source (cr, cairoGradient->getRadialGradient (center, radius.x, originOffset));
+
+                if (transformation)
+                {
+                    cairo_matrix_t currentMatrix;
+                    cairo_matrix_t resultMatrix;
+                    auto matrix = convert (*transformation);
+                    cairo_get_matrix (cr, &currentMatrix);
+                    cairo_matrix_multiply (&resultMatrix, &matrix, &currentMatrix);
+                    cairo_set_matrix (cr, &resultMatrix);
+                }
+
+                cairo_append_path (cr, p);
+
+                if (evenOdd)
+                {
+                    cairo_set_fill_rule (cr, CAIRO_FILL_RULE_EVEN_ODD);
+                    cairo_fill (cr);
+                }
+                else
+                {
+                    cairo_fill (cr);
+                }
+            }
+        }
+    }
+}
 //-----------------------------------------------------------------------------
 } // Cairo
 } // VSTGUI

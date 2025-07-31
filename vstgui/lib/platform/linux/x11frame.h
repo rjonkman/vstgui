@@ -11,6 +11,7 @@
 #include "irunloop.h"
 #include <memory>
 #include <functional>
+#include <chrono>
 
 //------------------------------------------------------------------------
 namespace VSTGUI {
@@ -67,6 +68,7 @@ private:
 private:
 	struct Impl;
 	std::unique_ptr<Impl> impl;
+	//static std::chrono::high_resolution_clock::time_point lastWheel;
 };
 
 //------------------------------------------------------------------------

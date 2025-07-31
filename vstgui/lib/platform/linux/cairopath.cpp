@@ -65,23 +65,24 @@ void GraphicsPath::addArc (const CRect& rect, double startAngle, double endAngle
 		startAngle = std::atan2 (std::sin (startAngle) * radiusX, std::cos (startAngle) * radiusY);
 		endAngle = std::atan2 (std::sin (endAngle) * radiusX, std::cos (endAngle) * radiusY);
 	}
+
 	cairo_matrix_t matrix;
 	cairo_get_matrix (context, &matrix);
 	cairo_translate (context, centerX, centerY);
 	cairo_scale (context, radiusX, radiusY);
+	
 	if (clockwise)
-	{
 		cairo_arc (context, 0, 0, 1, startAngle, endAngle);
-	}
 	else
-	{
 		cairo_arc_negative (context, 0, 0, 1, startAngle, endAngle);
-	}
+	
 	cairo_set_matrix (context, &matrix);
 }
 
 //------------------------------------------------------------------------
-void GraphicsPath::addEllipse (const CRect& rect) { addArc (rect, 0, 360, true); }
+void GraphicsPath::addEllipse (const CRect& rect) {
+    addArc (rect, 0, 360, true);
+}
 
 //------------------------------------------------------------------------
 void GraphicsPath::addRect (const CRect& rect)

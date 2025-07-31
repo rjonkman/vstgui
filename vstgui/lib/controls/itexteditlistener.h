@@ -19,6 +19,8 @@ public:
 	virtual void onTextEditPlatformControlTookFocus (CTextEdit* textEdit) = 0;
 	/** called when the natvie platform text edit control is going to be destroyed. */
 	virtual void onTextEditPlatformControlLostFocus (CTextEdit* textEdit) = 0;
+
+	virtual void onTextEditPlatformControlTextChanged (CTextEdit* textEdit) = 0;
 };
 
 //------------------------------------------------------------------------
@@ -27,6 +29,7 @@ class TextEditListenerAdapter : public ITextEditListener
 public:
 	void onTextEditPlatformControlTookFocus (CTextEdit* textEdit) override {}
 	void onTextEditPlatformControlLostFocus (CTextEdit* textEdit) override {}
+	void onTextEditPlatformControlTextChanged (CTextEdit* textEdit) override {}
 };
 
 //------------------------------------------------------------------------

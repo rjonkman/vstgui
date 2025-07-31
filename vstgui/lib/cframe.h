@@ -8,6 +8,7 @@
 #include "cviewcontainer.h"
 #include "optional.h"
 #include "platform/iplatformframecallback.h"
+#include <chrono>
 
 namespace VSTGUI {
 
@@ -236,6 +237,9 @@ public:
 	void setResizing(bool state) { resizing = state; }
 	bool getResizing() { return resizing; }
 
+	void* getHelpView() { return helpView; }
+	void setHelpView(void* view) { helpView = view; }
+
 	//-------------------------------------------
 protected:
 	struct CollectInvalidRects;
@@ -290,6 +294,9 @@ private:
 	Impl* pImpl {nullptr};
 	
 	bool resizing = false;
+
+	void* helpView = 0;
+	std::chrono::high_resolution_clock::time_point lastWheel;
 };
 
 //----------------------------------------------------

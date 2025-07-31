@@ -95,6 +95,14 @@ public:
 	bool drawFocusOnTop () override;
 	bool getFocusPath (CGraphicsPath& outPath) override;
 
+	void setOption(uint8_t value) {
+		option = value;
+	}
+
+	uint8_t getOption() {
+		return option;
+	}
+
 	using CheckDefaultValueEventFuncT = bool (*) (CControl*, MouseDownEvent&);
 	/** Function to check if a mouse down event should reset the value to its default value for a
 	 *control. Per default this checks for a left mouse down button and the control modifier key. */
@@ -122,6 +130,7 @@ protected:
 
 	IControlListener* listener;
 	int32_t  tag;
+	uint8_t option = 0;
 	float value;
 
 private:

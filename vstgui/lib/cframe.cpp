@@ -1669,6 +1669,51 @@ bool CFrame::platformDrawRect (CDrawContext* context, const CRect& rect)
 //-----------------------------------------------------------------------------
 void CFrame::platformOnEvent (Event& event)
 {
+
+    if (event.type == EventType::MouseWheel) {
+
+        auto& wheelEvent = castMouseWheelEvent (event);
+        onMouseWheelEvent (wheelEvent);
+
+        MouseWheelEvent* mEvent = (MouseWheelEvent*)&event;
+
+        auto curTime = std::chrono::high_resolution_clock::now ();
+        auto elapsedtime = std::chrono::duration_cast<std::chrono::milliseconds> (curTime - lastWheel);
+
+        float count = 1;
+
+        if (elapsedtime.count () < 60)
+            count += (60.f - elapsedtime.count ()) / 8.f;
+
+		float combX = mEvent->deltaX * count;
+		float combY = mEvent->deltaY * count;
+
+		if (combX < 0) {
+			if (combX < -8) combX = -8;
+			if (combX > -1) combX = -1;
+		}
+
+		else {
+			if (combX > 8) combX = 8;
+			if (combX < 1) combX = 1;
+		}
+
+		if (combY < 0) {
+			if (combY < -8) combY = -8;
+			if (combY > -1) combY = -1;
+		}
+
+		else {
+			if (combY > 8) combY = 8;
+			if (combY < 1) combY = 1;
+		}
+
+        mEvent->deltaX = combY;
+        mEvent->deltaY = combX;
+
+        lastWheel = curTime;
+    }
+
 	dispatchEvent (event);
 }
 

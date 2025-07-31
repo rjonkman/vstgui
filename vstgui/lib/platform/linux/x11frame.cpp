@@ -441,26 +441,27 @@ struct Frame::Impl : IFrameEventHandler
 				MouseWheelEvent wheelEvent;
 				wheelEvent.mousePosition = where;
 				wheelEvent.modifiers = toModifiers (event.state);
+
 				switch (event.detail)
 				{
 					case 4: // up
 					{
-						wheelEvent.deltaY = 1;
+                        wheelEvent.deltaY = 1;
 						break;
 					}
 					case 5: // down
 					{
-						wheelEvent.deltaY = -1;
+                        wheelEvent.deltaY = -1;
 						break;
 					}
 					case 6: // left
 					{
-						wheelEvent.deltaX = -1;
+                        wheelEvent.deltaX = -1;
 						break;
 					}
 					case 7: // right
 					{
-						wheelEvent.deltaX = 1;
+                        wheelEvent.deltaX = 1;
 						break;
 					}
 				}
