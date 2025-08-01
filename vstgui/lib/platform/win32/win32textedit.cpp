@@ -166,6 +166,16 @@ bool Win32TextEdit::updateSize ()
 	return false;
 }
 
+void Win32TextEdit::setCursorPosition (int pos)
+{
+	Edit_SetSel (platformControl, pos, pos);
+}
+
+uint32_t Win32TextEdit::getCursorPosition() {
+	DWORD res = Edit_GetSel (platformControl);
+	return LOWORD (res);
+}
+
 //-----------------------------------------------------------------------------
 void Win32TextEdit::textChanged ()
 {
