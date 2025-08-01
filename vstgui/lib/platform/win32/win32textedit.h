@@ -9,6 +9,7 @@
 #if WINDOWS
 
 #include <windows.h>
+#include <windowsx.h>
 
 #ifdef STRICT
 #define WINDOWSPROC WNDPROC
