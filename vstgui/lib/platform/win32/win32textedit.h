@@ -30,6 +30,9 @@ public:
 	bool updateSize () override;
 	bool drawsPlaceholder () const override { return false; }
 
+	void setCursorPosition (int position);
+	uint32_t getCursorPosition ();
+
 	HWND getPlatformControl () const { return platformControl; }
 	HBRUSH getPlatformBackColor () const { return platformBackColor; }
 	IPlatformTextEditCallback* getTextEdit () const { return textEdit; }
