@@ -20,7 +20,7 @@ public:
 	/** called when the natvie platform text edit control is going to be destroyed. */
 	virtual void onTextEditPlatformControlLostFocus (CTextEdit* textEdit) = 0;
 
-	virtual void onTextEditPlatformControlTextChanged (CTextEdit* textEdit) = 0;
+	virtual void onTextEditPlatformControlTextChanged (CTextEdit* textEdit) = 0; 
 };
 
 //------------------------------------------------------------------------
